@@ -506,6 +506,7 @@
 			var scale = +matrix[0];
 			var $parent = this.$parent;
 			var contain = typeof options.contain !== 'undefined' ? options.contain : this.options.contain;
+			var oldMatrix = this.getMatrix();
 
 			// Apply containment
 			if (contain) {
@@ -558,7 +559,11 @@
 			// Set the matrix on this.$set
 			this.setTransform('matrix(' + matrix.join(',') + ')');
 
-			if (!options.silent) {
+			// Trigger start only if there's an actual change
+			var change = true;
+			change = !matrixEquals(matrix, oldMatrix);
+
+			if (!options.silent && change) {
 				this._trigger('change', matrix);
 			}
 
